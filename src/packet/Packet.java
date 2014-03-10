@@ -4,9 +4,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import client.Client;
-
 import server.ClientSocket;
-
+import server.Server;
+import data.DataBase;
 import data.DataCluster;
 
 
@@ -17,14 +17,16 @@ public class Packet {
 	public static final byte TYPE_NEW_CLIENT = 1;
 	
 	public DataCluster dataCluster = new DataCluster("");
-	private int type;
+	protected int type;
 
 	public Packet(byte t) {
 		type = t;
 	}
 
-	public static Packet readNew(DataInputStream stream) throws IOException {
-		byte t = stream.readByte();
+	public synchronized static Packet readNew(DataInputStream stream) throws IOException {
+		byte[] bytes = new byte[1];
+		stream.read(bytes);
+		byte t = bytes[0];
 		Packet d = createNew(t);
 		if(d!=null){
 			d.read(stream);
@@ -32,13 +34,14 @@ public class Packet {
 		return d;
 	}
 
-	private void read(DataInputStream stream) throws IOException {
-		dataCluster.read(stream);
+	public synchronized void read(DataInputStream stream) throws IOException {
+		dataCluster = (DataCluster) DataBase.readNew(stream);
 	}
 
-	public void write(DataOutputStream stream) throws IOException {
+	public synchronized void write(DataOutputStream stream) throws IOException {
 		stream.writeByte(type);
 		dataCluster.write(stream);
+		stream.flush();
 	}
 
 	private static Packet createNew(byte newType) {
@@ -49,15 +52,15 @@ public class Packet {
 	}
 
 	public void serverRecived(ClientSocket clientSocket) throws IOException {
-		System.out.println("Server Recived: ");
-		System.out.println(dataCluster.convertToString());
-		if(clientSocket.server.echoMode){
-			write(clientSocket.clientCommunicatorThread.out);
-		}
+		clientSocket.server.println("Server Recived Packet Type: "+type);
+		//clientSocket.server.println("Server Recived: ");
+		//clientSocket.server.println("Packet Data Tree: \n"+dataCluster.convertToString(""));
 	}
 
 	public void clientRecived(Client client) {
-		System.out.println("Client Recived: ");
+		client.println("Client Recived Packet Type: "+type);
+		//client.println("Client Recived: ");
+		//client.println("Packet Data Tree: \n"+dataCluster.convertToString(""));
 	}
 
 }

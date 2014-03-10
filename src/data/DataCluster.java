@@ -47,11 +47,12 @@ public class DataCluster extends DataBase {
 		return null;
 	}
 
-	public String convertToString() {
+	@Override
+	public String convertToString(String prefix) {
 		String s = nameStringPrefix();
 		s+="\n";
 		for(int i=0;i<data.size();i++){
-			s += data.get(i).convertToString();
+			s += prefix + data.get(i).convertToString("  "+prefix);
 			s+="\n";
 		}
 		return s;

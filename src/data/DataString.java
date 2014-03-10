@@ -25,8 +25,9 @@ public class DataString extends DataBase {
 		data = stream.readUTF();
 	}
 
-	public String convertToString() {
-		return nameStringPrefix()+data;
+	@Override
+	public String convertToString(String prefix) {
+		return prefix + (nameStringPrefix()+data);
 	}
 
 }

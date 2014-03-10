@@ -25,8 +25,9 @@ public class DataInt extends DataBase {
 		data = stream.readInt();
 	}
 
-	public String convertToString() {
-		return nameStringPrefix()+data;
+	@Override
+	public String convertToString(String prefix) {
+		return prefix + (nameStringPrefix()+data);
 	}
 
 }

@@ -54,8 +54,8 @@ public class DataBase {
 		}
 	}
 
-	public String convertToString() {
-		return nameStringPrefix();
+	public String convertToString(String prefix) {
+		return prefix + nameStringPrefix();
 	}
 
 	protected String nameStringPrefix() {
