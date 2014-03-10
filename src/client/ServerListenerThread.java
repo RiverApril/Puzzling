@@ -27,10 +27,8 @@ public class ServerListenerThread extends Thread {
 				
 			} catch (SocketException e) {
 				exit = true;
-				e.printStackTrace();
 			} catch (IOException e) {
 				exit = true;
-				e.printStackTrace();
 			}
 		}
 		client.serverClosed();

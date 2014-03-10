@@ -66,13 +66,14 @@ public class Client extends Settings {
 	}
 
 	public void exit(String reason) {
-		println("Exit Client: \""+reason+"\"");
+		println("Exit Client: "+reason);
 		System.exit(0);
 	}
 
 	public void serverClosed() {
 		socket = null;
 		serverListenerThread = null;
+		println("Server Closed");
 	}
 	
 	private boolean joinServer(String ip, int port) {
@@ -89,10 +90,9 @@ public class Client extends Settings {
 			println("Connected to Server: "+ip+":"+port);
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			println("Failed to connect to Server: "+ip+":"+port);
+			return false;
 		}
-		println("Failed to connect to Server: "+ip+":"+port);
-		return false;
 	}
 
 	public static void main(String[] args){
